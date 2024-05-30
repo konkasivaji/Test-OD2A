@@ -1,0 +1,33 @@
+name: 3. Deployement
+run-name: ${{ github.actor }} is running the ${{ github.workflow }}
+on:
+  - workflow_dispatch
+
+
+jobs:
+  Dev_Deployment:
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Print Dev Variables
+      run: echo "The Dev environment variable is ${{ vars.HOSTNAME }}"
+
+
+  UAT_Deployment:
+    runs-on: ubuntu-latest
+    environment: UAT
+    needs: Dev_Deployment
+    steps:
+      - name: Print UAT Variables
+        run: echo "The UAT environment variable is ${{ vars.HOSTNAME }}"
+
+
+  Prod_Depployment:
+    runs-on: ubuntu-latest
+    environment: PROD
+    needs: UAT_Deployment
+    steps:
+      - name: Print PROD Variables
+        run: echo "The Prod environment variable is ${{ vars.HOSTNAME }}"
